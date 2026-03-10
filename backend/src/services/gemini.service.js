@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 /**
  * Groq AI Service (Free tier with Llama 3)
@@ -194,18 +195,17 @@ Keep it under 2 sentences. Include an emoji. Make it encouraging and practical.`
     }
 };
 
-export const analyzeImage = async (description) => {
-    const apiKey = process.env.GROQ_API_KEY;
+export const analyzeImage = async (imageUrl, description = "") => {
+    const apiKey = process.env.GEMINI_API_KEY;
     
     if (!apiKey) {
-        throw new Error('Groq API key not configured');
+        throw new Error('GEMINI_API_KEY not configured for image analysis');
     }
 
-    const prompt = `You are a nutrition expert. Analyze this meal and estimate nutrition.
+    const promptText = `You are a nutrition expert. Analyze this meal image and estimate its nutritional content.
+${description ? `User added this context: "${description}"` : ""}
 
-Meal description: "${description}"
-
-Respond in this exact JSON format:
+Respond strictly in this exact JSON format:
 {
     "foods": [
         {
@@ -222,30 +222,28 @@ Respond in this exact JSON format:
     "totalCarbs": 0,
     "totalFat": 0,
     "mealType": "breakfast/lunch/dinner/snack",
-    "healthRating": "1-10",
-    "suggestions": "brief health suggestion"
+    "healthRating": 8,
+    "suggestions": "Brief health suggestion"
 }
 
-Provide reasonable estimates based on common serving sizes.`;
+Provide reasonable estimates based on the visual contents and common serving sizes. Do not include markdown formatting or extra text outside the JSON.`;
 
     try {
-        const response = await axios.post(
-            GROQ_API_URL,
-            {
-                model: 'llama-3.3-70b-versatile',
-                messages: [{ role: 'user', content: prompt }],
-                temperature: 0.3,
-                max_tokens: 800
-            },
-            {
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-        const text = response.data.choices?.[0]?.message?.content;
+        const mimeType = imageUrl.split(';')[0].split(':')[1];
+        const base64Data = imageUrl.split(',')[1];
+        
+        const imagePart = {
+            inlineData: {
+                data: base64Data,
+                mimeType
+            }
+        };
+
+        const result = await model.generateContent([promptText, imagePart]);
+        const text = result.response.text();
         
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
@@ -255,11 +253,16 @@ Provide reasonable estimates based on common serving sizes.`;
         return {
             rawAnalysis: text,
             foods: [],
-            suggestions: text
+            totalCalories: 0,
+            totalProtein: 0,
+            totalCarbs: 0,
+            totalFat: 0,
+            healthRating: 5,
+            suggestions: "Could not parse specific nutritional data, but the image has been processed."
         };
     } catch (error) {
-        console.error('Groq API error:', error.response?.data || error.message);
-        throw new Error('Failed to analyze food');
+        console.error('Gemini API error:', error.message);
+        throw new Error('Failed to analyze food image with Gemini');
     }
 };
 

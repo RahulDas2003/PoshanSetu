@@ -9,10 +9,16 @@
     "dev": "node --watch server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["nutrition", "health", "ai", "mern"],
+  "keywords": [
+    "nutrition",
+    "health",
+    "ai",
+    "mern"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.13.3",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",

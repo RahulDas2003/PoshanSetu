@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider } from './components/ThemeProvider';
 import Navbar from './components/layout/Navbar';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import Home from './pages/Home';
@@ -49,21 +49,7 @@ function AppContent() {
             </main>
             
             {/* Toast notifications */}
-            <Toaster
-                position="top-right"
-                toastOptions={{
-                    duration: 4000,
-                    style: {
-                        background: 'var(--bg-card)',
-                        color: 'var(--text-primary)',
-                        border: '1px solid var(--border-light)',
-                        borderRadius: 'var(--radius-lg)',
-                        boxShadow: 'var(--shadow-lg)'
-                    },
-                    success: { iconTheme: { primary: 'var(--primary-500)', secondary: 'white' } },
-                    error: { iconTheme: { primary: 'var(--error)', secondary: 'white' } }
-                }}
-            />
+            <Toaster position="top-right" richColors closeButton />
         </div>
     );
 }

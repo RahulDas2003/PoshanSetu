@@ -87,7 +87,11 @@ export const aiAPI = {
     chat: (message) => api.post('/ai/chat', { message }),
     getDailyTip: () => api.get('/ai/daily-tip'),
     analyzeFood: (description) => api.post('/ai/analyze-food', { description }),
-    analyzeImage: (description) => api.post('/ai/analyze-image', { description })
+    analyzeImage: (formData) => api.post('/ai/analyze-image', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
 };
 
 export default api;

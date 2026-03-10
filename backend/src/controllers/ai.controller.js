@@ -90,13 +90,22 @@ export const getDailyTip = asyncHandler(async (req, res) => {
 // @route   POST /api/ai/analyze-image
 // @access  Private
 export const analyzeImage = asyncHandler(async (req, res) => {
+    const file = req.file;
     const { description } = req.body;
 
-    if (!description) {
-        throw new ApiError(400, 'Please describe your food');
+    if (!file) {
+        throw new ApiError(400, 'Please upload an image');
     }
 
-    const analysis = await geminiService.analyzeImage(description);
+    // Convert buffer to base64
+    const base64Image = file.buffer.toString('base64');
+    const mimeType = file.mimetype;
+    
+    // Create data URI format for Zhipu AI
+    const imageUrl = `data:${mimeType};base64,${base64Image}`;
+
+    // Pass the image data and optional description to the service
+    const analysis = await geminiService.analyzeImage(imageUrl, description);
 
     res.status(200).json(new ApiResponse(200, { analysis }, 'Food analyzed successfully'));
 });

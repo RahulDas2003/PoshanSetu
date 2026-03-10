@@ -1,230 +1,150 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FiArrowRight, FiCheck, FiCamera, FiPieChart, FiTarget, FiZap } from 'react-icons/fi';
-import './Home.css';
+import { ArrowRight, Check, Camera, PieChart, Target, Zap, Sparkles, Activity, Apple, Salad } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const Home = () => {
     const { isAuthenticated } = useAuth();
 
-    const features = [
-        {
-            icon: FiCamera,
-            title: 'AI Food Scanner',
-            description: 'Snap a photo of your meal and get instant nutritional analysis powered by AI'
-        },
-        {
-            icon: FiPieChart,
-            title: 'Smart Analytics',
-            description: 'Beautiful charts and insights to track your nutrition journey over time'
-        },
-        {
-            icon: FiTarget,
-            title: 'Personalized Goals',
-            description: 'Auto-calculated daily targets based on your body metrics and goals'
-        },
-        {
-            icon: FiZap,
-            title: 'AI Recommendations',
-            description: 'Get smart meal suggestions tailored to help you reach your goals'
-        }
-    ];
-
-    const benefits = [
-        'Track calories, protein, carbs, and fats',
-        'Beautiful progress dashboard',
-        'Build healthy eating habits',
-        'Completely free to use',
-        'No subscription required',
-        'Works on all devices'
-    ];
-
     return (
-        <div className="home">
-            {/* Hero Section */}
-            <section className="hero">
-                <div className="hero-bg"></div>
-                <div className="hero-content container">
-                    <div className="hero-text">
-                        <span className="hero-badge">🍎 AI-Powered Nutrition</span>
-                        <h1 className="hero-title">
-                            Eat Smarter with
-                            <span className="text-gradient"> AI Nutrition</span>
-                            <br />Tracking
+        <div className="bg-background min-h-screen pt-20 overflow-hidden text-foreground pb-20">
+            
+            <div className="container mx-auto px-6 relative z-10 space-y-32">
+                
+                {/* 1. MASSIVE HERO SECTION */}
+                <section className="pt-20 lg:pt-32 text-center lg:text-left grid lg:grid-cols-2 gap-12 items-center">
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border text-sm font-bold text-secondary-foreground">
+                            <Sparkles className="h-5 w-5 text-amber-500" /> Introducing SmartAI Nutrition
+                        </div>
+                        
+                        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter">
+                            Eat Smart.<br/>Live <span className="text-primary block">Better.</span>
                         </h1>
-                        <p className="hero-description">
-                            Transform your health journey with intelligent food tracking. 
-                            Scan meals, get instant nutrition insights, and achieve your 
-                            goals with personalized AI recommendations.
+                        
+                        <p className="text-xl sm:text-2xl text-muted-foreground font-medium max-w-xl mx-auto lg:mx-0">
+                            Snap a photo of your meal and let AI do the rest. Effortless tracking, personalized insights, and beautiful analytics.
                         </p>
-                        <div className="hero-actions">
-                            <Link 
-                                to={isAuthenticated ? '/dashboard' : '/register'} 
-                                className="btn btn-primary btn-lg"
-                            >
-                                {isAuthenticated ? 'Go to Dashboard' : 'Start Free Today'}
-                                <FiArrowRight />
+                        
+                        <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                            <Link to={isAuthenticated ? '/dashboard' : '/register'}>
+                                <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 rounded-full gap-2 transition-transform hover:scale-105 shadow-xl">
+                                    {isAuthenticated ? 'Go to Dashboard' : 'Start Free Today'}
+                                    <ArrowRight className="h-5 w-5" />
+                                </Button>
                             </Link>
-                            <Link to="/login" className="btn btn-secondary btn-lg">
-                                Login to Account
-                            </Link>
-                        </div>
-                        <div className="hero-stats">
-                            <div className="stat">
-                                <span className="stat-number">100%</span>
-                                <span className="stat-label">Free Forever</span>
-                            </div>
-                            <div className="stat">
-                                <span className="stat-number">AI</span>
-                                <span className="stat-label">Powered</span>
-                            </div>
-                            <div className="stat">
-                                <span className="stat-number">1000+</span>
-                                <span className="stat-label">Foods</span>
-                            </div>
+                            {!isAuthenticated && (
+                                <Link to="/login">
+                                    <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 rounded-full">
+                                        Login
+                                    </Button>
+                                </Link>
+                            )}
                         </div>
                     </div>
-                    <div className="hero-visual">
-                        <div className="phone-mockup">
-                            <div className="phone-screen">
-                                <div className="mockup-header">
-                                    <span>Today's Progress</span>
+                    
+                    {/* Hero Visual / Mockup */}
+                    <div className="relative pt-10 lg:pt-0 animate-in fade-in zoom-in-95 duration-1000 delay-200">
+                        <div className="w-[300px] sm:w-[350px] md:w-[400px] aspect-[1/2] rounded-[3rem] bg-card mx-auto border-8 border-primary/20 shadow-2xl overflow-hidden relative">
+                            {/* Dynamic Mockup UI */}
+                            <div className="p-6 h-full flex flex-col gap-6 bg-secondary/30">
+                                <div className="space-y-1">
+                                    <div className="text-sm font-bold text-muted-foreground">Today's Progress</div>
+                                    <div className="text-3xl font-black">1,450 kcal</div>
                                 </div>
-                                <div className="mockup-progress">
-                                    <div className="progress-ring">
-                                        <svg viewBox="0 0 100 100">
-                                            <circle cx="50" cy="50" r="45" className="ring-bg" />
-                                            <circle cx="50" cy="50" r="45" className="ring-fill" />
-                                        </svg>
-                                        <div className="ring-content">
-                                            <span className="ring-value">1,450</span>
-                                            <span className="ring-label">kcal</span>
-                                        </div>
+                                <div className="w-full aspect-square rounded-full border-[1.5rem] border-muted border-t-emerald-500 border-r-emerald-500 flex items-center justify-center relative shadow-inner">
+                                    <div className="text-center w-full">
+                                        <div className="text-4xl font-black text-emerald-500">65%</div>
+                                        <div className="text-sm font-bold text-muted-foreground">of goal</div>
+                                    </div>
+                                    <div className="absolute top-0 right-0 transform rotate-12 bg-background p-3 rounded-2xl shadow-lg border">
+                                        <Apple className="h-8 w-8 text-rose-500" />
+                                    </div>
+                                    <div className="absolute bottom-4 left-0 -translate-x-4 bg-background p-3 rounded-2xl shadow-lg border">
+                                        <Salad className="h-8 w-8 text-emerald-500" />
                                     </div>
                                 </div>
-                                <div className="mockup-macros">
-                                    <div className="macro-item protein">
-                                        <span>Protein</span>
-                                        <div className="macro-bar"><div style={{width: '75%'}}></div></div>
-                                        <span>75g</span>
-                                    </div>
-                                    <div className="macro-item carbs">
-                                        <span>Carbs</span>
-                                        <div className="macro-bar"><div style={{width: '60%'}}></div></div>
-                                        <span>180g</span>
-                                    </div>
-                                    <div className="macro-item fat">
-                                        <span>Fat</span>
-                                        <div className="macro-bar"><div style={{width: '45%'}}></div></div>
-                                        <span>45g</span>
-                                    </div>
+                                <div className="space-y-3 flex-1 mt-auto bg-background p-5 rounded-3xl shadow-sm border">
+                                    <div className="flex justify-between font-bold"><span>Protein</span><span className="text-rose-500">75g</span></div>
+                                    <div className="w-full h-3 bg-secondary rounded-full overflow-hidden"><div className="h-full bg-rose-500 w-3/4"></div></div>
+                                    
+                                    <div className="flex justify-between font-bold mt-2"><span>Carbs</span><span className="text-blue-500">180g</span></div>
+                                    <div className="w-full h-3 bg-secondary rounded-full overflow-hidden"><div className="h-full bg-blue-500 w-2/3"></div></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* Features Section */}
-            <section className="features-section">
-                <div className="container">
-                    <div className="section-header">
-                        <h2>Everything You Need to Eat Healthy</h2>
-                        <p>Powerful features to help you track, analyze, and improve your nutrition</p>
+                {/* 2. BENTO GRID SECTION (Features) */}
+                <section className="pt-20">
+                    <div className="text-center max-w-3xl mx-auto mb-16 px-4">
+                        <h2 className="text-5xl font-black mb-6">Built to be effortless.</h2>
+                        <p className="text-xl text-muted-foreground font-medium">Everything you need to master your nutrition without the tedious manual entry.</p>
                     </div>
-                    <div className="features-grid">
-                        {features.map((feature, index) => (
-                            <div key={index} className="feature-card">
-                                <div className="feature-icon">
-                                    <feature.icon />
-                                </div>
-                                <h3>{feature.title}</h3>
-                                <p>{feature.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
-            {/* Benefits Section */}
-            <section className="benefits-section">
-                <div className="container">
-                    <div className="benefits-content">
-                        <div className="benefits-text">
-                            <h2>Why SmartAI Nutrition?</h2>
-                            <p>
-                                We built SmartAI Nutrition to make healthy eating simple, 
-                                accessible, and actually enjoyable. No complicated calorie 
-                                counting or confusing macros.
-                            </p>
-                            <ul className="benefits-list">
-                                {benefits.map((benefit, index) => (
-                                    <li key={index}>
-                                        <FiCheck className="check-icon" />
-                                        <span>{benefit}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                            <Link to="/register" className="btn btn-primary">
-                                Get Started Free <FiArrowRight />
-                            </Link>
+                    {/* The Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 auto-rows-[minmax(300px,auto)]">
+                        {/* Big Card 1 */}
+                        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 p-10 rounded-[2rem] lg:col-span-8 flex flex-col justify-end relative overflow-hidden group">
+                            <Camera className="h-10 w-10 mb-6 opacity-90" />
+                            <h3 className="text-3xl font-black mb-4">AI Food Scanner</h3>
+                            <p className="text-lg opacity-90 font-medium max-w-lg relative z-10">Snap a photo. Our advanced AI instantly recognizes your meal and estimates calories and macros with incredible accuracy.</p>
+                            <Camera className="absolute right-0 bottom-0 h-96 w-96 opacity-5 translate-x-1/4 translate-y-1/4 pointer-events-none" />
                         </div>
-                        <div className="benefits-image">
-                            <div className="image-card">
-                                <div className="meal-card">
-                                    <div className="meal-emoji">🥗</div>
-                                    <div className="meal-info">
-                                        <span className="meal-name">Chicken Salad</span>
-                                        <span className="meal-cal">320 kcal</span>
-                                    </div>
-                                    <span className="meal-badge">Logged ✓</span>
-                                </div>
-                                <div className="meal-card">
-                                    <div className="meal-emoji">🍳</div>
-                                    <div className="meal-info">
-                                        <span className="meal-name">Eggs & Toast</span>
-                                        <span className="meal-cal">280 kcal</span>
-                                    </div>
-                                    <span className="meal-badge">Logged ✓</span>
-                                </div>
-                                <div className="meal-card">
-                                    <div className="meal-emoji">🍌</div>
-                                    <div className="meal-info">
-                                        <span className="meal-name">Banana Smoothie</span>
-                                        <span className="meal-cal">180 kcal</span>
-                                    </div>
-                                    <span className="meal-badge">Logged ✓</span>
-                                </div>
+                        
+                        {/* Small Card 1 */}
+                        <div className="bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 p-10 rounded-[2rem] lg:col-span-4 flex flex-col justify-end relative overflow-hidden group">
+                            <Zap className="h-10 w-10 mb-6 opacity-90" />
+                            <h3 className="text-2xl font-black mb-4">Smart Recs</h3>
+                            <p className="text-base opacity-90 font-medium relative z-10">Personalized meal suggestions designed to hit your missing macros for the day.</p>
+                            <Zap className="absolute right-0 bottom-0 h-64 w-64 opacity-5 translate-x-1/4 translate-y-1/4 pointer-events-none" />
+                        </div>
+
+                        {/* Small Card 2 */}
+                        <div className="bg-primary/5 border border-primary/10 text-primary p-10 rounded-[2rem] lg:col-span-4 flex flex-col justify-end relative overflow-hidden group">
+                            <Target className="h-10 w-10 mb-6" />
+                            <h3 className="text-2xl font-black mb-4">Auto Goals</h3>
+                            <p className="text-base font-medium opacity-90">Dynamic targets that adjust to your personal weight loss, maintenance, or muscle gain objectives.</p>
+                            <Target className="absolute -right-10 -top-10 h-64 w-64 opacity-5 pointer-events-none" />
+                        </div>
+
+                        {/* Big Card 2 */}
+                        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 p-10 rounded-[2rem] lg:col-span-8 flex flex-col justify-end relative overflow-hidden group">
+                            <PieChart className="h-10 w-10 mb-6 opacity-90" />
+                            <h3 className="text-3xl font-black mb-4 z-10 relative">Beautiful Analytics</h3>
+                            <p className="text-lg opacity-90 font-medium max-w-md z-10 relative">Visualize your progress with stunning charts. See exactly where your calories come from and how your habits evolve.</p>
+                            <PieChart className="absolute right-0 bottom-0 h-96 w-96 opacity-5 translate-x-1/4 translate-y-1/4 pointer-events-none" />
+                        </div>
+                    </div>
+                </section>
+
+                {/* CTA Overlay */}
+                <section className="relative px-4">
+                    <div className="bg-primary/5 border rounded-[3rem] p-12 lg:p-20 text-center overflow-hidden relative shadow-sm">
+                        <div className="relative z-10 w-full max-w-3xl mx-auto space-y-8">
+                            <h2 className="text-4xl md:text-5xl font-black leading-tight text-foreground">Ready to transform your health?</h2>
+                            <p className="text-xl text-muted-foreground font-medium">Join thousands tracking meals the smart way. 100% free.</p>
+                            <div className="pt-4 pb-2">
+                                <Link to="/register">
+                                    <Button size="lg" className="text-lg px-10 py-8 rounded-full shadow-xl transform hover:scale-105 transition-all gap-2">
+                                        Start Your Journey <ArrowRight className="h-5 w-5" />
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* CTA Section */}
-            <section className="cta-section">
-                <div className="container">
-                    <div className="cta-content">
-                        <h2>Ready to Transform Your Nutrition?</h2>
-                        <p>Join thousands who are eating smarter with AI-powered tracking</p>
-                        <Link to="/register" className="btn btn-primary btn-lg">
-                            Start Your Journey <FiArrowRight />
-                        </Link>
+                {/* Minimal Footer */}
+                <footer className="text-center py-10 border-t text-muted-foreground font-medium flex flex-col items-center justify-center">
+                    <div className="flex items-center gap-2 mb-4 text-xl font-black text-foreground">
+                        <Activity className="h-6 w-6 text-primary" /> SmartAI Nutrition
                     </div>
-                </div>
-            </section>
+                    <p>Designed for effortless tracking. Made with ❤️ in 2026.</p>
+                </footer>
 
-            {/* Footer */}
-            <footer className="footer">
-                <div className="container">
-                    <div className="footer-content">
-                        <div className="footer-brand">
-                            <span className="logo-icon">🍎</span>
-                            <span>SmartAI Nutrition</span>
-                        </div>
-                        <p>Made with ❤️ for healthier living</p>
-                    </div>
-                </div>
-            </footer>
+            </div>
         </div>
     );
 };

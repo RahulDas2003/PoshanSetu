@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { FiUser, FiTarget, FiActivity, FiSave, FiRefreshCw } from 'react-icons/fi';
+import { User, Target, Activity, Save, RefreshCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../services/api';
-import toast from 'react-hot-toast';
-import './Profile.css';
+import { toast } from 'sonner';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const Profile = () => {
     const { user, updateUser } = useAuth();
@@ -135,226 +137,310 @@ const Profile = () => {
     ];
 
     const goals = [
-        { value: 'lose', label: 'Lose Weight', emoji: '📉' },
-        { value: 'maintain', label: 'Maintain Weight', emoji: '⚖️' },
-        { value: 'gain', label: 'Gain Weight', emoji: '📈' }
+        { value: 'lose', label: 'Lose Weight', color: 'bg-blue-500' },
+        { value: 'maintain', label: 'Maintain', color: 'bg-emerald-500' },
+        { value: 'gain', label: 'Gain Muscle', color: 'bg-rose-500' }
     ];
 
     return (
-        <div className="profile-page">
-            <div className="profile-container">
-                <header className="profile-header">
-                    <h1>Settings</h1>
-                    <p>Manage your profile and nutrition targets</p>
-                </header>
+        <div className="min-h-screen pt-28 pb-20 bg-background text-foreground">
+            <div className="container mx-auto px-6 max-w-4xl space-y-8">
+                
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3 mb-1">
+                            <div className="bg-primary/10 text-primary p-2 rounded-lg">
+                                <User className="h-6 w-6" />
+                            </div>
+                            Profile
+                        </h1>
+                        <p className="text-muted-foreground ml-1">Manage your personal settings</p>
+                    </div>
+                </div>
 
                 {/* Tab Navigation */}
-                <div className="profile-tabs">
-                    <button 
-                        className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
+                <div className="flex p-1 bg-secondary rounded-full w-fit mx-auto lg:mx-0 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    <Button 
+                        variant={activeTab === 'profile' ? 'default' : 'ghost'}
+                        className={`rounded-full px-8 font-semibold gap-2 ${activeTab !== 'profile' && 'text-muted-foreground hover:text-foreground'}`}
                         onClick={() => setActiveTab('profile')}
                     >
-                        <FiUser /> Profile
-                    </button>
-                    <button 
-                        className={`tab-btn ${activeTab === 'targets' ? 'active' : ''}`}
+                        <User className="h-4 w-4" /> Info
+                    </Button>
+                    <Button 
+                        variant={activeTab === 'targets' ? 'default' : 'ghost'}
+                        className={`rounded-full px-8 font-semibold gap-2 ${activeTab !== 'targets' && 'text-muted-foreground hover:text-foreground'}`}
                         onClick={() => setActiveTab('targets')}
                     >
-                        <FiTarget /> Targets
-                    </button>
+                        <Target className="h-4 w-4" /> Targets
+                    </Button>
                 </div>
 
                 {/* Profile Tab */}
                 {activeTab === 'profile' && (
-                    <div className="profile-section">
-                        <div className="form-card">
-                            <h3><FiUser /> Personal Info</h3>
-                            <div className="form-grid">
-                                <div className="form-group full-width">
-                                    <label>Name</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={profile.name}
-                                        onChange={handleProfileChange}
-                                        placeholder="Your name"
-                                    />
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                        {/* Personal Info Grid */}
+                        <Card className="shadow-sm border">
+                            <CardHeader className="bg-muted/30 border-b">
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-background p-1.5 rounded-md shadow-sm border text-muted-foreground">
+                                        <User className="h-4 w-4" />
+                                    </div>
+                                    <CardTitle>Personal Info</CardTitle>
                                 </div>
-                                <div className="form-group">
-                                    <label>Age</label>
-                                    <input
-                                        type="number"
-                                        name="age"
-                                        value={profile.age}
-                                        onChange={handleProfileChange}
-                                        placeholder="25"
-                                        min="10"
-                                        max="120"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Gender</label>
-                                    <select name="gender" value={profile.gender} onChange={handleProfileChange}>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>Height (cm)</label>
-                                    <input
-                                        type="number"
-                                        name="height"
-                                        value={profile.height}
-                                        onChange={handleProfileChange}
-                                        placeholder="170"
-                                        min="100"
-                                        max="250"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Weight (kg)</label>
-                                    <input
-                                        type="number"
-                                        name="weight"
-                                        value={profile.weight}
-                                        onChange={handleProfileChange}
-                                        placeholder="70"
-                                        min="30"
-                                        max="300"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="form-card">
-                            <h3><FiActivity /> Activity Level</h3>
-                            <div className="activity-grid">
-                                {activityLevels.map(level => (
-                                    <label 
-                                        key={level.value}
-                                        className={`activity-option ${profile.activityLevel === level.value ? 'active' : ''}`}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="activityLevel"
-                                            value={level.value}
-                                            checked={profile.activityLevel === level.value}
+                            </CardHeader>
+                            <CardContent className="p-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2 md:col-span-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-1">Full Name</label>
+                                        <Input
+                                            type="text"
+                                            name="name"
+                                            value={profile.name}
                                             onChange={handleProfileChange}
+                                            placeholder="Your full name"
+                                            className="h-12 bg-secondary/50 rounded-xl"
                                         />
-                                        <span className="activity-label">{level.label}</span>
-                                        <span className="activity-desc">{level.desc}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="form-card">
-                            <h3><FiTarget /> Goal</h3>
-                            <div className="goal-grid">
-                                {goals.map(goal => (
-                                    <label 
-                                        key={goal.value}
-                                        className={`goal-option ${profile.goal === goal.value ? 'active' : ''}`}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="goal"
-                                            value={goal.value}
-                                            checked={profile.goal === goal.value}
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-1">Age</label>
+                                        <Input
+                                            type="number"
+                                            name="age"
+                                            value={profile.age}
                                             onChange={handleProfileChange}
+                                            placeholder="25"
+                                            className="h-12 bg-secondary/50 rounded-xl"
                                         />
-                                        <span className="goal-emoji">{goal.emoji}</span>
-                                        <span className="goal-label">{goal.label}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-1">Gender</label>
+                                        <select 
+                                            name="gender" 
+                                            value={profile.gender} 
+                                            onChange={handleProfileChange}
+                                            className="w-full h-12 bg-secondary/50 border border-input rounded-xl px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-colors"
+                                        >
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-1">Height (cm)</label>
+                                        <Input
+                                            type="number"
+                                            name="height"
+                                            value={profile.height}
+                                            onChange={handleProfileChange}
+                                            placeholder="170"
+                                            className="h-12 bg-secondary/50 rounded-xl"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-1">Weight (kg)</label>
+                                        <Input
+                                            type="number"
+                                            name="weight"
+                                            value={profile.weight}
+                                            onChange={handleProfileChange}
+                                            placeholder="70"
+                                            className="h-12 bg-secondary/50 rounded-xl"
+                                        />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
 
-                        <button className="btn btn-primary btn-save" onClick={saveProfile} disabled={loading}>
-                            {loading ? <span className="spinner"></span> : <><FiSave /> Save Profile</>}
-                        </button>
+                        {/* Goal Cards */}
+                        <Card className="shadow-sm border">
+                            <CardHeader className="bg-muted/30 border-b">
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-background p-1.5 rounded-md shadow-sm border text-muted-foreground">
+                                        <Target className="h-4 w-4" />
+                                    </div>
+                                    <CardTitle>Main Goal</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    {goals.map(goal => (
+                                        <label 
+                                            key={goal.value}
+                                            className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${profile.goal === goal.value ? `border-primary bg-primary/5 shadow-sm` : `border-transparent bg-secondary/50 text-muted-foreground hover:border-border`}`}
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="goal"
+                                                value={goal.value}
+                                                checked={profile.goal === goal.value}
+                                                onChange={handleProfileChange}
+                                                className="sr-only"
+                                            />
+                                            <span className="text-4xl mb-3 block transform transition-transform group-hover:scale-110">{goal.emoji}</span>
+                                            <span className="font-semibold">{goal.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Activity Level List */}
+                        <Card className="shadow-sm border">
+                            <CardHeader className="bg-muted/30 border-b">
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-background p-1.5 rounded-md shadow-sm border text-muted-foreground">
+                                        <Activity className="h-4 w-4" />
+                                    </div>
+                                    <CardTitle>Activity Level</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-6">
+                                <div className="space-y-3">
+                                    {activityLevels.map(level => (
+                                        <label 
+                                            key={level.value}
+                                            className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${profile.activityLevel === level.value ? 'border-primary bg-primary/5' : 'border-transparent bg-secondary/30 hover:bg-secondary/60 hover:border-border'}`}
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="activityLevel"
+                                                value={level.value}
+                                                checked={profile.activityLevel === level.value}
+                                                onChange={handleProfileChange}
+                                                className="w-5 h-5 accent-primary border-slate-300 focus:ring-primary"
+                                            />
+                                            <div className="ml-4">
+                                                <div className={`font-semibold ${profile.activityLevel === level.value ? 'text-foreground' : 'text-muted-foreground'}`}>{level.label}</div>
+                                                <div className="text-sm text-muted-foreground">{level.desc}</div>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Save Button */}
+                        <div className="flex justify-end pt-2 pb-6">
+                            <Button 
+                                size="lg"
+                                className="rounded-full px-8 gap-2 shadow-md w-full sm:w-auto"
+                                onClick={saveProfile} 
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+                                ) : (
+                                    <><Save className="h-4 w-4" /> Save Profile</>
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 )}
 
                 {/* Targets Tab */}
                 {activeTab === 'targets' && (
-                    <div className="targets-section">
-                        <div className="form-card">
-                            <div className="card-header-with-action">
-                                <h3><FiTarget /> Daily Nutrition Targets</h3>
-                                <button 
-                                    className="btn btn-secondary btn-sm"
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                        <Card className="shadow-sm border">
+                            <CardHeader className="bg-muted/30 border-b flex flex-row items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-background p-1.5 rounded-md shadow-sm border text-muted-foreground">
+                                        <Target className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                        <CardTitle className="mb-1">Daily Nutrition Targets</CardTitle>
+                                        <CardDescription>Set goals manually or calculate them automatically</CardDescription>
+                                    </div>
+                                </div>
+                                <Button 
+                                    variant="outline"
+                                    size="sm"
+                                    className="rounded-full gap-2 whitespace-nowrap"
                                     onClick={calculateTargets}
                                     disabled={calculating}
                                 >
-                                    {calculating ? <span className="spinner"></span> : <><FiRefreshCw /> Auto-Calculate</>}
-                                </button>
-                            </div>
-                            <p className="help-text">Set your daily nutrition goals or auto-calculate based on your profile.</p>
-                            
-                            <div className="targets-grid">
-                                <div className="target-card calories">
-                                    <label>Calories</label>
-                                    <div className="target-input-wrapper">
-                                        <input
-                                            type="number"
-                                            name="calories"
-                                            value={targets.calories}
-                                            onChange={handleTargetChange}
-                                            min="1000"
-                                            max="5000"
-                                        />
-                                        <span className="unit">kcal</span>
+                                    {calculating ? (
+                                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                    ) : (
+                                        <><RefreshCw className="h-3 w-3" /> Auto-Calc</>
+                                    )}
+                                </Button>
+                            </CardHeader>
+                            <CardContent className="p-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="bg-secondary/40 p-5 rounded-2xl border">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground block mb-3">Calories</label>
+                                        <div className="flex items-end">
+                                            <Input
+                                                type="number"
+                                                name="calories"
+                                                value={targets.calories}
+                                                onChange={handleTargetChange}
+                                                className="bg-transparent border-0 text-4xl font-black text-foreground outline-none w-32 px-0 h-auto focus-visible:ring-0 shadow-none -ml-1 text-left"
+                                            />
+                                            <span className="text-sm font-semibold text-muted-foreground mb-1">kcal</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="target-card protein">
-                                    <label>Protein</label>
-                                    <div className="target-input-wrapper">
-                                        <input
-                                            type="number"
-                                            name="protein"
-                                            value={targets.protein}
-                                            onChange={handleTargetChange}
-                                            min="50"
-                                            max="400"
-                                        />
-                                        <span className="unit">g</span>
+                                    
+                                    <div className="bg-emerald-500/5 dark:bg-emerald-500/10 p-5 rounded-2xl border border-emerald-500/20">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block mb-3">Protein</label>
+                                        <div className="flex items-end">
+                                            <Input
+                                                type="number"
+                                                name="protein"
+                                                value={targets.protein}
+                                                onChange={handleTargetChange}
+                                                className="bg-transparent border-0 text-4xl font-black text-emerald-600 dark:text-emerald-400 outline-none w-32 px-0 h-auto focus-visible:ring-0 shadow-none -ml-1 text-left"
+                                            />
+                                            <span className="text-sm font-semibold text-emerald-600/60 dark:text-emerald-400/60 mb-1">g</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="target-card carbs">
-                                    <label>Carbs</label>
-                                    <div className="target-input-wrapper">
-                                        <input
-                                            type="number"
-                                            name="carbs"
-                                            value={targets.carbs}
-                                            onChange={handleTargetChange}
-                                            min="50"
-                                            max="600"
-                                        />
-                                        <span className="unit">g</span>
-                                    </div>
-                                </div>
-                                <div className="target-card fat">
-                                    <label>Fat</label>
-                                    <div className="target-input-wrapper">
-                                        <input
-                                            type="number"
-                                            name="fat"
-                                            value={targets.fat}
-                                            onChange={handleTargetChange}
-                                            min="20"
-                                            max="200"
-                                        />
-                                        <span className="unit">g</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <button className="btn btn-primary btn-save" onClick={saveTargets} disabled={loading}>
-                            {loading ? <span className="spinner"></span> : <><FiSave /> Save Targets</>}
-                        </button>
+                                    <div className="bg-blue-500/5 dark:bg-blue-500/10 p-5 rounded-2xl border border-blue-500/20">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-3">Carbs</label>
+                                        <div className="flex items-end">
+                                            <Input
+                                                type="number"
+                                                name="carbs"
+                                                value={targets.carbs}
+                                                onChange={handleTargetChange}
+                                                className="bg-transparent border-0 text-4xl font-black text-blue-600 dark:text-blue-400 outline-none w-32 px-0 h-auto focus-visible:ring-0 shadow-none -ml-1 text-left"
+                                            />
+                                            <span className="text-sm font-semibold text-blue-600/60 dark:text-blue-400/60 mb-1">g</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-amber-500/5 dark:bg-amber-500/10 p-5 rounded-2xl border border-amber-500/20">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 block mb-3">Fat</label>
+                                        <div className="flex items-end">
+                                            <Input
+                                                type="number"
+                                                name="fat"
+                                                value={targets.fat}
+                                                onChange={handleTargetChange}
+                                                className="bg-transparent border-0 text-4xl font-black text-amber-600 dark:text-amber-400 outline-none w-32 px-0 h-auto focus-visible:ring-0 shadow-none -ml-1 text-left"
+                                            />
+                                            <span className="text-sm font-semibold text-amber-600/60 dark:text-amber-400/60 mb-1">g</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <div className="flex justify-end pt-2 pb-6">
+                            <Button 
+                                size="lg"
+                                className="rounded-full px-8 gap-2 shadow-md w-full sm:w-auto"
+                                onClick={saveTargets} 
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+                                ) : (
+                                    <><Save className="h-4 w-4" /> Save Targets</>
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 )}
             </div>
