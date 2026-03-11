@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Minus, X, Check, Camera, Coffee, Salad, Beef, Apple, Sparkles, Upload } from 'lucide-react';
-import { foodAPI, mealAPI } from '../services/api';
+import { foodAPI, mealAPI, aiAPI } from '../services/api';
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -81,20 +81,22 @@ const LogMeal = () => {
     };
 
     const addFood = (food) => {
-        const exists = selectedFoods.find(f => f.name === food.name);
-        if (exists) {
-            toast.error('Food already on plate');
-            return;
-        }
-
-        setSelectedFoods([...selectedFoods, {
-            ...food,
-            servings: 1,
-            nutrition: food.nutrition
-        }]);
+        setSelectedFoods(prevFoods => {
+            const exists = prevFoods.find(f => f.name === food.name);
+            if (exists) {
+                toast.error(`${food.name} already on plate`);
+                return prevFoods;
+            }
+            
+            toast.success(`${food.name} added to plate`);
+            return [...prevFoods, {
+                ...food,
+                servings: 1,
+                nutrition: food.nutrition
+            }];
+        });
         setSearchQuery('');
         setShowDropdown(false);
-        toast.success(`Food added to plate`);
     };
 
     const removeFood = (index) => {
@@ -111,29 +113,51 @@ const LogMeal = () => {
         }));
     };
 
-    const handlePhotoScan = (e) => {
+    const handlePhotoScan = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
         setIsScanning(true);
         
-        // Simulate AI Processing delay
-        setTimeout(() => {
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            const response = await aiAPI.analyzeImage(formData);
+            
             setIsScanning(false);
-            const mockAIDetectedFood = {
-                name: 'Chicken Curry with Rice',
-                nutrition: { calories: 520, protein: 35, carbs: 48, fat: 18 }
-            };
             
-            toast.success("Food detected successfully!", {
-                icon: <Sparkles className="h-4 w-4 text-primary" />
-            });
-            
-            addFood(mockAIDetectedFood);
-        }, 2500);
-        
-        // Reset input
-        e.target.value = null;
+            if (response.data?.analysis?.foods && response.data.analysis.foods.length > 0) {
+                toast.success("Food detected successfully!", {
+                    icon: <Sparkles className="h-4 w-4 text-primary" />
+                });
+                
+                response.data.analysis.foods.forEach(food => {
+                    const detectedFood = {
+                        name: food.name,
+                        nutrition: {
+                            calories: food.calories || 0,
+                            protein: food.protein || 0,
+                            carbs: food.carbs || 0,
+                            fat: food.fat || 0
+                        },
+                        servingSize: 1,
+                        servingUnit: food.portion || 'serving',
+                        servings: 1
+                    };
+                    addFood(detectedFood);
+                });
+            } else {
+                toast.error(response.data?.analysis?.suggestions || "Could not detect specific foods. Please try another image.");
+            }
+        } catch (error) {
+            console.error('Photo scan error:', error);
+            setIsScanning(false);
+            toast.error(error.message || 'Failed to analyze image. Please try again.');
+        } finally {
+            // Reset input
+            e.target.value = null;
+        }
     };
 
     const getTotalNutrition = () => {
