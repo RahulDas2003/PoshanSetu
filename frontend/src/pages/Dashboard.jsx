@@ -16,6 +16,7 @@ const Dashboard = () => {
     const [data, setData] = useState(null);
     const [weeklyData, setWeeklyData] = useState(null);
     const [insights, setInsights] = useState([]);
+    const [schoolStats, setSchoolStats] = useState(null);
 
     useEffect(() => {
         fetchAllData();
@@ -24,14 +25,16 @@ const Dashboard = () => {
     const fetchAllData = async () => {
         setLoading(true);
         try {
-            const [dailyRes, weeklyRes, insightsRes] = await Promise.all([
+            const [dailyRes, weeklyRes, insightsRes, schoolRes] = await Promise.all([
                 dashboardAPI.getDaily(),
                 dashboardAPI.getWeekly(),
-                dashboardAPI.getInsights()
+                dashboardAPI.getInsights(),
+                dashboardAPI.getSchoolStats()
             ]);
             setData(dailyRes.data);
             setWeeklyData(weeklyRes.data);
             setInsights(insightsRes.data.insights || []);
+            setSchoolStats(schoolRes.data || null);
         } catch (error) {
             console.error('Failed to fetch dashboard data:', error);
             toast.error('Failed to load dashboard data');
@@ -358,6 +361,41 @@ const Dashboard = () => {
                                 </Button>
                             </CardContent>
                         </Card>
+
+                        {/* School Malnutrition Overview Widget */}
+                        {schoolStats && schoolStats.totalStudents > 0 && (
+                            <Card className="shadow-sm border-blue-500/20 bg-blue-500/5">
+                                <CardHeader className="pb-3 border-b border-blue-500/10">
+                                    <CardTitle className="text-lg flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <Activity className="h-5 w-5 text-blue-500" />
+                                            School Overview
+                                        </div>
+                                        <div className="bg-background px-2 py-0.5 rounded-full text-xs font-bold text-muted-foreground border">
+                                            {schoolStats.totalStudents} Monitored
+                                        </div>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-4 grid grid-cols-3 gap-2">
+                                    <div className="text-center p-2 bg-emerald-500/10 rounded-lg">
+                                        <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{schoolStats.riskStats.Healthy}</div>
+                                        <div className="text-[10px] uppercase font-semibold text-emerald-600/80">Healthy</div>
+                                    </div>
+                                    <div className="text-center p-2 bg-amber-500/10 rounded-lg">
+                                        <div className="text-lg font-bold text-amber-600 dark:text-amber-400">{schoolStats.riskStats.AtRisk}</div>
+                                        <div className="text-[10px] uppercase font-semibold text-amber-600/80">At Risk</div>
+                                    </div>
+                                    <div className="text-center p-2 bg-rose-500/10 rounded-lg">
+                                        <div className="text-lg font-bold text-rose-600 dark:text-rose-400">{schoolStats.riskStats.Malnourished}</div>
+                                        <div className="text-[10px] uppercase font-semibold text-rose-600/80">Severe</div>
+                                    </div>
+                                    <Button variant="outline" size="sm" className="col-span-3 mt-2 hover:bg-blue-500/10 hover:text-blue-600 transition-colors" asChild>
+                                        <Link to="/school-analytics">Full Report <ChevronRight className="h-4 w-4 ml-1"/></Link>
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        )}
+                        
 
                         <Card className="flex-1 shadow-sm flex flex-col overflow-hidden border">
                             <CardHeader className="flex flex-row items-center justify-between pb-3 bg-muted/10 border-b">

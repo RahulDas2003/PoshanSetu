@@ -7,6 +7,11 @@ const mealLogSchema = new mongoose.Schema({
         required: true,
         index: true
     },
+    child: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Child',
+        index: true // Optional reference for school mid-day meals
+    },
     date: {
         type: Date,
         required: true,
@@ -60,6 +65,12 @@ const mealLogSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    mealQualityScore: {
+        type: Number // 1-10 grading of meal based on child's need
+    },
+    mealSuggestions: [{
+        type: String // Suggested improvements
+    }],
     totalNutrition: {
         calories: { type: Number, default: 0 },
         protein: { type: Number, default: 0 },

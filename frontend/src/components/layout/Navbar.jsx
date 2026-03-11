@@ -42,7 +42,9 @@ const Navbar = () => {
         { path: '/dashboard', label: 'Dashboard', icon: Home },
         { path: '/log-meal', label: 'Log Meal', icon: PlusCircle },
         { path: '/meals', label: 'My Meals', icon: Utensils },
-        { path: '/analytics', label: 'Analytics', icon: PieChart },
+        { path: '/children', label: 'Students', icon: User },
+        { path: '/school-analytics', label: 'School Analytics', icon: PieChart },
+        { path: '/analytics', label: 'My Analytics', icon: PieChart },
         { path: '/ai-assistant', label: 'AI', icon: Cpu },
     ];
 

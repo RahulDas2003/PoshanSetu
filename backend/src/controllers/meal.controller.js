@@ -9,7 +9,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 // @route   POST /api/meals
 // @access  Private
 export const createMeal = asyncHandler(async (req, res) => {
-    const { date, mealType, foods, notes, imageUrl } = req.body;
+    const { date, mealType, foods, notes, imageUrl, childId } = req.body;
 
     if (!mealType || !foods || foods.length === 0) {
         throw new ApiError(400, 'Meal type and at least one food item are required');
@@ -21,8 +21,37 @@ export const createMeal = asyncHandler(async (req, res) => {
         mealType,
         foods,
         notes,
-        imageUrl
+        imageUrl,
+        child: childId || undefined
     });
+
+    // Evaluate meal quality for children
+    if (childId) {
+        let qualityScore = 10;
+        const suggestions = [];
+        
+        const totalCals = mealLog.totalNutrition?.calories || 0;
+        const totalProtein = mealLog.totalNutrition?.protein || 0;
+        const totalCarbs = mealLog.totalNutrition?.carbs || 0;
+
+        // Basic Rules for A Mid-Day score
+        if (totalCals < 300) {
+            qualityScore -= 2;
+            suggestions.push("Meal is too low in calories. Add energy-dense foods.");
+        }
+        if (totalProtein < 10) {
+            qualityScore -= 3;
+            suggestions.push("Add protein sources like lentils, eggs, or milk.");
+        }
+        if (totalCarbs < 40) {
+            qualityScore -= 1;
+            suggestions.push("Add more complex carbs for sustained energy.");
+        }
+        
+        mealLog.mealQualityScore = Math.max(1, qualityScore);
+        mealLog.mealSuggestions = suggestions;
+        await mealLog.save();
+    }
 
     // Update user streak
     await updateStreak(req.user._id);
@@ -42,6 +71,7 @@ export const getMealsByDate = asyncHandler(async (req, res) => {
 
     const meals = await MealLog.find({
         user: req.user._id,
+        child: { $exists: false },
         date: { $gte: startOfDay, $lte: endOfDay }
     }).sort({ mealType: 1 });
 
@@ -73,6 +103,7 @@ export const getMealsByDateRange = asyncHandler(async (req, res) => {
 
     const meals = await MealLog.find({
         user: req.user._id,
+        child: { $exists: false },
         date: { 
             $gte: new Date(start), 
             $lte: new Date(new Date(end).setHours(23, 59, 59, 999))

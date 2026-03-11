@@ -77,6 +77,7 @@ export const dashboardAPI = {
     getWeekly: () => api.get('/dashboard/weekly'),
     getMonthly: () => api.get('/dashboard/monthly'),
     getInsights: () => api.get('/dashboard/insights'),
+    getSchoolStats: () => api.get('/dashboard/school-stats'),
     logWeight: (data) => api.post('/dashboard/weight', data)
 };
 
@@ -92,6 +93,16 @@ export const aiAPI = {
             'Content-Type': 'multipart/form-data'
         }
     })
+};
+
+// Child API
+export const childAPI = {
+    getAll: () => api.get('/children'),
+    getById: (id) => api.get(`/children/${id}`),
+    create: (data) => api.post('/children', data),
+    update: (id, data) => api.put(`/children/${id}`, data),
+    delete: (id) => api.delete(`/children/${id}`),
+    addMeasurement: (id, data) => api.post(`/children/${id}/measurements`, data)
 };
 
 export default api;

@@ -13,6 +13,9 @@ import Meals from './pages/Meals';
 import Analytics from './pages/Analytics';
 import Profile from './pages/Profile';
 import AIAssistant from './pages/AIAssistant';
+import Children from './pages/Children';
+import ChildProfile from './pages/ChildProfile';
+import SchoolAnalytics from './pages/SchoolAnalytics';
 import './App.css';
 
 // Route that redirects authenticated users away from auth pages
@@ -41,6 +44,11 @@ function AppContent() {
                         <Route path="/analytics" element={<Analytics />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/ai-assistant" element={<AIAssistant />} />
+                        
+                        {/* Kid tracking routes */}
+                        <Route path="/children" element={<Children />} />
+                        <Route path="/children/:id" element={<ChildProfile />} />
+                        <Route path="/school-analytics" element={<SchoolAnalytics />} />
                     </Route>
                     
                     {/* Catch all */}

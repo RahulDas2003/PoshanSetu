@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, Minus, X, Check, Camera, Coffee, Salad, Beef, Apple, Sparkles, Upload } from 'lucide-react';
-import { foodAPI, mealAPI, aiAPI } from '../services/api';
+import { Search, Plus, Minus, X, Check, Camera, Coffee, Salad, Beef, Apple, Sparkles, Upload, UserRound } from 'lucide-react';
+import { foodAPI, mealAPI, aiAPI, childAPI } from '../services/api';
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,10 @@ const LogMeal = () => {
     const [searching, setSearching] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     
+    // Child Selection State
+    const [children, setChildren] = useState([]);
+    const [selectedChildId, setSelectedChildId] = useState('');
+
     // AI Photo State
     const [isScanning, setIsScanning] = useState(false);
     const fileInputRef = useRef(null);
@@ -46,6 +50,19 @@ const LogMeal = () => {
 
         return () => clearTimeout(timer);
     }, [searchQuery]);
+
+    // Fetch children for assignment
+    useEffect(() => {
+        const fetchChildren = async () => {
+            try {
+                const res = await childAPI.getAll();
+                setChildren(res.data.children || []);
+            } catch (error) {
+                console.error("Failed to fetch children for meal logging", error);
+            }
+        };
+        fetchChildren();
+    }, []);
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -189,7 +206,8 @@ const LogMeal = () => {
                     servingUnit: f.servingUnit || 'g',
                     nutrition: f.nutrition
                 })),
-                date: new Date().toISOString()
+                date: new Date().toISOString(),
+                childId: selectedChildId || undefined
             });
             toast.success('Meal logged successfully!');
             navigate('/dashboard');
@@ -276,6 +294,26 @@ const LogMeal = () => {
                         </Card>
                     ))}
                 </div>
+
+                {/* Child Assignment (Optional) */}
+                {children.length > 0 && (
+                    <div className="animate-in fade-in slide-in-from-bottom-7 duration-1000 mb-6 flex items-center gap-3">
+                        <label className="text-sm font-semibold flex items-center gap-2">
+                            <UserRound className="h-4 w-4 text-muted-foreground" />
+                            Assign to Student (Optional):
+                        </label>
+                        <select 
+                            value={selectedChildId}
+                            onChange={(e) => setSelectedChildId(e.target.value)}
+                            className="h-10 px-3 rounded-md border border-input bg-background/50 text-sm focus:ring-1 focus:ring-primary w-64"
+                        >
+                            <option value="">-- Personal Meal --</option>
+                            {children.map(child => (
+                                <option key={child._id} value={child._id}>{child.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                     

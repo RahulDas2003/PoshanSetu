@@ -1,6 +1,7 @@
 import MealLog from '../models/mealLog.model.js';
 import WeightLog from '../models/weightLog.model.js';
 import User from '../models/user.model.js';
+import Child from '../models/child.model.js';
 import ApiResponse from '../utils/ApiResponse.js';
 import asyncHandler from '../utils/asyncHandler.js';
 
@@ -20,6 +21,7 @@ export const getDailySummary = asyncHandler(async (req, res) => {
     // Get meals for the day
     const meals = await MealLog.find({
         user: req.user._id,
+        child: { $exists: false },
         date: { $gte: startOfDay, $lte: endOfDay }
     }).sort({ createdAt: 1 });
 
@@ -78,6 +80,7 @@ export const getWeeklySummary = asyncHandler(async (req, res) => {
         {
             $match: {
                 user: req.user._id,
+                child: { $exists: false },
                 date: { $gte: weekAgo, $lte: today }
             }
         },
@@ -139,6 +142,7 @@ export const getMonthlySummary = asyncHandler(async (req, res) => {
         {
             $match: {
                 user: req.user._id,
+                child: { $exists: false },
                 date: { $gte: monthAgo, $lte: today }
             }
         },
@@ -203,6 +207,7 @@ export const getInsights = asyncHandler(async (req, res) => {
     // Get weekly data
     const meals = await MealLog.find({
         user: req.user._id,
+        child: { $exists: false },
         date: { $gte: weekAgo }
     });
 
@@ -253,3 +258,104 @@ export const getInsights = asyncHandler(async (req, res) => {
 
     res.status(200).json(new ApiResponse(200, { insights }, 'Insights generated'));
 });
+
+// @desc    Get school analytics summary
+// @route   GET /api/dashboard/school-stats
+// @access  Private
+export const getSchoolStats = asyncHandler(async (req, res) => {
+    // 1. Get all children assigned to this user (teacher/admin)
+    const children = await Child.find({ user: req.user._id });
+    
+    const riskStats = {
+        Healthy: 0,
+        AtRisk: 0,
+        Malnourished: 0
+    };
+
+    children.forEach(c => {
+        if (c.riskLevel === 'Healthy') riskStats.Healthy++;
+        if (c.riskLevel === 'At Risk') riskStats.AtRisk++;
+        if (c.riskLevel === 'Malnourished') riskStats.Malnourished++;
+    });
+
+    // 2. Fetch recent meals assigned to these children (past 7 days)
+    const today = new Date();
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const childMeals = await MealLog.find({
+        user: req.user._id,
+        child: { $exists: true },
+        date: { $gte: weekAgo }
+    }).populate('child', 'name');
+
+    // 3. Calculate school-wide averages and deficiency alerts
+    let totalCals = 0;
+    let totalProtein = 0;
+    
+    // Track repeated low intakes
+    const lowProteinCount = {};
+    const lowCarbsCount = {};
+
+    childMeals.forEach(meal => {
+        totalCals += meal.totalNutrition.calories || 0;
+        totalProtein += meal.totalNutrition.protein || 0;
+
+        const childId = meal.child?._id?.toString() || 'unknown';
+        // Sub-par protein
+        if ((meal.totalNutrition.protein || 0) < 10) {
+            lowProteinCount[childId] = (lowProteinCount[childId] || 0) + 1;
+        }
+        // Sub-par carbs/energy
+        if ((meal.totalNutrition.carbs || 0) < 40) {
+            lowCarbsCount[childId] = (lowCarbsCount[childId] || 0) + 1;
+        }
+    });
+
+    const mealCount = childMeals.length || 1;
+    const averages = {
+        calories: Math.round(totalCals / mealCount),
+        protein: Math.round(totalProtein / mealCount)
+    };
+
+    // Generate alerts for consistently deficient children
+    const alerts = [];
+    Object.keys(lowProteinCount).forEach(childId => {
+        if (lowProteinCount[childId] >= 3) {
+            const childName = childMeals.find(m => m.child?._id?.toString() === childId)?.child?.name || 'A student';
+            alerts.push({
+                type: 'warning',
+                title: 'Possible Protein Deficiency',
+                message: `${childName} has had low protein intake multiple times this week.`
+            });
+        }
+    });
+    
+    Object.keys(lowCarbsCount).forEach(childId => {
+        if (lowCarbsCount[childId] >= 3) {
+            const childName = childMeals.find(m => m.child?._id?.toString() === childId)?.child?.name || 'A student';
+            alerts.push({
+                type: 'warning',
+                title: 'Low Energy Setup',
+                message: `${childName} is consistently receiving meals low in complex carbs.`
+            });
+        }
+    });
+    
+    // Add a generic alert if none exists to demonstrate UI
+    if (alerts.length === 0 && children.length > 0) {
+        alerts.push({
+            type: 'info',
+            title: 'School Nutrition is Stable',
+            message: 'No repeated severe deficiencies detected this week.'
+        });
+    }
+
+    res.status(200).json(new ApiResponse(200, {
+        totalStudents: children.length,
+        riskStats,
+        averages,
+        alerts
+    }, 'School Stats generated'));
+});
+

@@ -7,6 +7,7 @@ import foodRoutes from './routes/food.route.js';
 import mealRoutes from './routes/meal.route.js';
 import dashboardRoutes from './routes/dashboard.route.js';
 import aiRoutes from './routes/ai.route.js';
+import childRoutes from './routes/child.route.js';
 
 import errorHandler from './middlewares/errorHandler.middleware.js';
 
@@ -36,6 +37,7 @@ app.use('/api/foods', foodRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/children', childRoutes);
 
 app.use((req, res, next) => {
     res.status(404).json({
