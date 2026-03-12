@@ -12,7 +12,7 @@ const Home = () => {
             <div className="container mx-auto px-6 relative z-10 space-y-32">
                 
                 {/* 1. MASSIVE HERO SECTION */}
-                <section className="pt-20 lg:pt-32 text-center lg:text-left grid lg:grid-cols-2 gap-12 items-center">
+                <section className="pt-8 lg:pt-12 text-center lg:text-left grid lg:grid-cols-2 gap-12 items-center">
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border text-sm font-bold text-secondary-foreground">
                             <Sparkles className="h-5 w-5 text-amber-500" /> Introducing SmartAI Nutrition
