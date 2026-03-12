@@ -120,14 +120,14 @@ const Home = () => {
                 </section>
 
                 {/* CTA Overlay */}
-                <section className="relative px-4">
-                    <div className="bg-primary/5 border rounded-[3rem] p-12 lg:p-20 text-center overflow-hidden relative shadow-sm">
-                        <div className="relative z-10 w-full max-w-3xl mx-auto space-y-8">
-                            <h2 className="text-4xl md:text-5xl font-black leading-tight text-foreground">Ready to transform your health?</h2>
-                            <p className="text-xl text-muted-foreground font-medium">Join thousands tracking meals the smart way. 100% free.</p>
-                            <div className="pt-4 pb-2">
+                <section className="relative px-2 sm:px-4">
+                    <div className="bg-primary/5 border rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 lg:p-20 text-center overflow-hidden relative shadow-sm">
+                        <div className="relative z-10 w-full max-w-3xl mx-auto space-y-6 sm:space-y-8">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight text-foreground">Ready to transform your health?</h2>
+                            <p className="text-lg sm:text-xl text-muted-foreground font-medium">Join thousands tracking meals the smart way. 100% free.</p>
+                            <div className="pt-2 sm:pt-4 pb-2">
                                 <Link to="/register">
-                                    <Button size="lg" className="text-lg px-10 py-8 rounded-full shadow-xl transform hover:scale-105 transition-all gap-2">
+                                    <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 py-6 sm:px-10 sm:py-8 rounded-2xl sm:rounded-full shadow-xl transform hover:scale-105 transition-all gap-2 flex items-center justify-center">
                                         Start Your Journey <ArrowRight className="h-5 w-5" />
                                     </Button>
                                 </Link>
