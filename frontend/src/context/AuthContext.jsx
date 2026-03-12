@@ -13,9 +13,18 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(() => {
+        try {
+            const saved = localStorage.getItem('user');
+            return saved ? JSON.parse(saved) : null;
+        } catch {
+            return null;
+        }
+    });
+    const [loading, setLoading] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        return !!(localStorage.getItem('token') && localStorage.getItem('user'));
+    });
 
     // Check for existing auth on mount
     useEffect(() => {
@@ -33,9 +42,10 @@ export const AuthProvider = ({ children }) => {
                     // Token invalid, clear storage
                     localStorage.removeItem('token');
                     localStorage.removeItem('user');
+                    setUser(null);
+                    setIsAuthenticated(false);
                 }
             }
-            setLoading(false);
         };
 
         checkAuth();
