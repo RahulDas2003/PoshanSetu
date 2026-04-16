@@ -273,11 +273,22 @@ export const getSchoolStats = asyncHandler(async (req, res) => {
         Obesity: 0
     };
 
+    // Derive BMI classification from actual BMI values to handle stale records
+    const getBmiClassification = (bmi) => {
+        if (bmi == null) return 'Healthy Weight';
+        if (bmi < 18.5) return 'Underweight';
+        if (bmi <= 24.9) return 'Healthy Weight';
+        if (bmi <= 29.9) return 'Overweight';
+        return 'Obesity';
+    };
+
     children.forEach(c => {
-        if (c.riskLevel === 'Underweight') riskStats.Underweight++;
-        if (c.riskLevel === 'Healthy Weight') riskStats.HealthyWeight++;
-        if (c.riskLevel === 'Overweight') riskStats.Overweight++;
-        if (c.riskLevel === 'Obesity') riskStats.Obesity++;
+        const latestBmi = c.measurements?.[0]?.bmi;
+        const classification = latestBmi ? getBmiClassification(latestBmi) : (c.riskLevel || 'Healthy Weight');
+        if (classification === 'Underweight') riskStats.Underweight++;
+        else if (classification === 'Healthy Weight') riskStats.HealthyWeight++;
+        else if (classification === 'Overweight') riskStats.Overweight++;
+        else if (classification === 'Obesity') riskStats.Obesity++;
     });
 
     // 2. Fetch recent meals assigned to these children (past 7 days)

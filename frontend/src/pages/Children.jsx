@@ -71,6 +71,20 @@ const Children = () => {
         }
     };
 
+    // Derive BMI classification from actual BMI value to handle stale DB records
+    const getBmiClassification = (bmi) => {
+        if (bmi == null) return null;
+        if (bmi < 18.5) return 'Underweight';
+        if (bmi <= 24.9) return 'Healthy Weight';
+        if (bmi <= 29.9) return 'Overweight';
+        return 'Obesity';
+    };
+
+    const getChildRiskLevel = (child) => {
+        const latestBmi = child.measurements?.[0]?.bmi;
+        return latestBmi ? getBmiClassification(latestBmi) : (child.riskLevel || 'Healthy Weight');
+    };
+
     const getRiskStyles = (riskLevel) => {
         switch (riskLevel) {
             case 'Healthy Weight': return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
@@ -218,10 +232,10 @@ const Children = () => {
                                                     {child.measurements?.[0]?.bmi || 'N/A'}
                                                 </div>
                                             </div>
-                                            <div className={`p-2.5 rounded-lg border flex flex-col justify-center gap-1 ${getRiskStyles(child.riskLevel)}`}>
+                                            <div className={`p-2.5 rounded-lg border flex flex-col justify-center gap-1 ${getRiskStyles(getChildRiskLevel(child))}`}>
                                                 <div className="text-[10px] uppercase font-bold tracking-wider opacity-80">Risk Status</div>
                                                 <div className="font-semibold text-xs flex items-center gap-1.5">
-                                                    {getRiskIcon(child.riskLevel)} {child.riskLevel}
+                                                    {getRiskIcon(getChildRiskLevel(child))} {getChildRiskLevel(child)}
                                                 </div>
                                             </div>
                                         </div>

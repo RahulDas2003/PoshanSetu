@@ -87,7 +87,16 @@ const ChildProfile = () => {
     }));
 
     const latest = child.measurements?.[0] || {};
-    const riskLevel = child.riskLevel || 'Healthy Weight';
+
+    // Derive BMI classification from actual BMI value to handle stale DB records
+    const getBmiClassification = (bmi) => {
+        if (bmi == null) return 'Healthy Weight';
+        if (bmi < 18.5) return 'Underweight';
+        if (bmi <= 24.9) return 'Healthy Weight';
+        if (bmi <= 29.9) return 'Overweight';
+        return 'Obesity';
+    };
+    const riskLevel = latest.bmi ? getBmiClassification(latest.bmi) : (child.riskLevel || 'Healthy Weight');
 
     const getRiskColors = (risk) => {
         switch (risk) {
