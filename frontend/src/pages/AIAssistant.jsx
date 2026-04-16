@@ -227,7 +227,7 @@ const AIAssistant = () => {
                                             <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-background"></div>
                                         </div>
                                         <div>
-                                            <CardTitle className="text-sm font-bold tracking-tight">SmartAI Assistant</CardTitle>
+                                            <CardTitle className="text-sm font-bold tracking-tight">PoshanSetu Assistant</CardTitle>
                                             <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                                                 Online
                                             </div>

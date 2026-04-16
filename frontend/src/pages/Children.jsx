@@ -73,18 +73,20 @@ const Children = () => {
 
     const getRiskStyles = (riskLevel) => {
         switch (riskLevel) {
-            case 'Healthy': return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
-            case 'At Risk': return 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20';
-            case 'Malnourished': return 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20';
+            case 'Healthy Weight': return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
+            case 'Underweight': return 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20';
+            case 'Overweight': return 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20';
+            case 'Obesity': return 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20';
             default: return 'bg-secondary text-secondary-foreground border-border';
         }
     };
 
     const getRiskIcon = (riskLevel) => {
         switch (riskLevel) {
-            case 'Healthy': return <CheckCircle className="h-4 w-4" />;
-            case 'At Risk': return <AlertTriangle className="h-4 w-4" />;
-            case 'Malnourished': return <Activity className="h-4 w-4" />;
+            case 'Healthy Weight': return <CheckCircle className="h-4 w-4" />;
+            case 'Underweight': return <AlertTriangle className="h-4 w-4" />;
+            case 'Overweight': return <AlertTriangle className="h-4 w-4" />;
+            case 'Obesity': return <Activity className="h-4 w-4" />;
             default: return null;
         }
     };

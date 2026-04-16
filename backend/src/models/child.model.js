@@ -45,8 +45,8 @@ const childSchema = new mongoose.Schema({
     }],
     riskLevel: {
         type: String,
-        enum: ['Healthy', 'At Risk', 'Malnourished'],
-        default: 'Healthy'
+        enum: ['Underweight', 'Healthy Weight', 'Overweight', 'Obesity'],
+        default: 'Healthy Weight'
     }
 }, {
     timestamps: true
@@ -67,14 +67,16 @@ childSchema.pre('save', function(next) {
             const bmi = latest.weight / (heightInMeters * heightInMeters);
             latest.bmi = Math.round(bmi * 100) / 100;
 
-            // WHO Malnutrition simplified logic for School Kids
-            // Generally under 14 is high risk, 14-16 is at risk (Highly simplified)
-            if (latest.bmi < 14) {
-                this.riskLevel = 'Malnourished';
-            } else if (latest.bmi >= 14 && latest.bmi < 15.5) {
-                this.riskLevel = 'At Risk';
+            // Standard BMI Classification
+            // Underweight (<18.5), Healthy Weight (18.5–24.9), Overweight (25.0–29.9), Obesity (≥30.0)
+            if (latest.bmi < 18.5) {
+                this.riskLevel = 'Underweight';
+            } else if (latest.bmi >= 18.5 && latest.bmi <= 24.9) {
+                this.riskLevel = 'Healthy Weight';
+            } else if (latest.bmi >= 25.0 && latest.bmi <= 29.9) {
+                this.riskLevel = 'Overweight';
             } else {
-                this.riskLevel = 'Healthy';
+                this.riskLevel = 'Obesity';
             }
         }
     }

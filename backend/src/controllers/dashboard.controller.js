@@ -267,15 +267,17 @@ export const getSchoolStats = asyncHandler(async (req, res) => {
     const children = await Child.find({ user: req.user._id });
     
     const riskStats = {
-        Healthy: 0,
-        AtRisk: 0,
-        Malnourished: 0
+        Underweight: 0,
+        HealthyWeight: 0,
+        Overweight: 0,
+        Obesity: 0
     };
 
     children.forEach(c => {
-        if (c.riskLevel === 'Healthy') riskStats.Healthy++;
-        if (c.riskLevel === 'At Risk') riskStats.AtRisk++;
-        if (c.riskLevel === 'Malnourished') riskStats.Malnourished++;
+        if (c.riskLevel === 'Underweight') riskStats.Underweight++;
+        if (c.riskLevel === 'Healthy Weight') riskStats.HealthyWeight++;
+        if (c.riskLevel === 'Overweight') riskStats.Overweight++;
+        if (c.riskLevel === 'Obesity') riskStats.Obesity++;
     });
 
     // 2. Fetch recent meals assigned to these children (past 7 days)

@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
             
             setUser(userData);
             setIsAuthenticated(true);
-            toast.success(response.message || 'Welcome to SmartAI Nutrition! 🍎');
+            toast.success(response.message || 'Welcome to PoshanSetu! 🍎');
             
             return { success: true };
         } catch (error) {

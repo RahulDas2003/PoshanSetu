@@ -15,7 +15,7 @@ const Home = () => {
                 <section className="pt-8 lg:pt-12 text-center lg:text-left grid lg:grid-cols-2 gap-12 items-center">
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border text-sm font-bold text-secondary-foreground">
-                            <Sparkles className="h-5 w-5 text-amber-500" /> Introducing SmartAI Nutrition
+                            <Sparkles className="h-5 w-5 text-amber-500" /> Introducing PoshanSetu
                         </div>
                         
                         <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter">
@@ -139,7 +139,7 @@ const Home = () => {
                 {/* Minimal Footer */}
                 <footer className="text-center py-10 border-t text-muted-foreground font-medium flex flex-col items-center justify-center">
                     <div className="flex items-center gap-2 mb-4 text-xl font-black text-foreground">
-                        <Activity className="h-6 w-6 text-primary" /> SmartAI Nutrition
+                        <Activity className="h-6 w-6 text-primary" /> PoshanSetu
                     </div>
                     <p>Designed for effortless tracking. Made with ❤️ in 2026.</p>
                 </footer>

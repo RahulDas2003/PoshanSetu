@@ -87,13 +87,14 @@ const ChildProfile = () => {
     }));
 
     const latest = child.measurements?.[0] || {};
-    const riskLevel = child.riskLevel || 'Healthy';
+    const riskLevel = child.riskLevel || 'Healthy Weight';
 
     const getRiskColors = (risk) => {
         switch (risk) {
-            case 'Healthy': return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
-            case 'At Risk': return 'bg-amber-500/10 text-amber-600 border-amber-500/20';
-            case 'Malnourished': return 'bg-rose-500/10 text-rose-600 border-rose-500/20';
+            case 'Healthy Weight': return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
+            case 'Underweight': return 'bg-amber-500/10 text-amber-600 border-amber-500/20';
+            case 'Overweight': return 'bg-orange-500/10 text-orange-600 border-orange-500/20';
+            case 'Obesity': return 'bg-rose-500/10 text-rose-600 border-rose-500/20';
             default: return 'bg-secondary text-secondary-foreground border-border';
         }
     };
@@ -179,7 +180,7 @@ const ChildProfile = () => {
                     <Card className={`border-2 transition-all ${getRiskColors(riskLevel)}`}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-bold uppercase tracking-wider">Health Status</CardTitle>
-                            {riskLevel === 'Healthy' ? <CheckCircle className="h-5 w-5" /> : riskLevel === 'At Risk' ? <AlertTriangle className="h-5 w-5" /> : <Activity className="h-5 w-5" />}
+                            {riskLevel === 'Healthy Weight' ? <CheckCircle className="h-5 w-5" /> : riskLevel === 'Underweight' ? <AlertTriangle className="h-5 w-5" /> : <Activity className="h-5 w-5" />}
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-black tracking-tight mt-1">{riskLevel}</div>

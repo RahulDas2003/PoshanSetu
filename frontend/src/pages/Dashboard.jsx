@@ -376,20 +376,24 @@ const Dashboard = () => {
                                         </div>
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent className="p-4 grid grid-cols-3 gap-2">
+                                <CardContent className="p-4 grid grid-cols-4 gap-2">
                                     <div className="text-center p-2 bg-emerald-500/10 rounded-lg">
-                                        <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{schoolStats.riskStats.Healthy}</div>
+                                        <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{schoolStats.riskStats.HealthyWeight}</div>
                                         <div className="text-[10px] uppercase font-semibold text-emerald-600/80">Healthy</div>
                                     </div>
                                     <div className="text-center p-2 bg-amber-500/10 rounded-lg">
-                                        <div className="text-lg font-bold text-amber-600 dark:text-amber-400">{schoolStats.riskStats.AtRisk}</div>
-                                        <div className="text-[10px] uppercase font-semibold text-amber-600/80">At Risk</div>
+                                        <div className="text-lg font-bold text-amber-600 dark:text-amber-400">{schoolStats.riskStats.Underweight}</div>
+                                        <div className="text-[10px] uppercase font-semibold text-amber-600/80">Under</div>
+                                    </div>
+                                    <div className="text-center p-2 bg-orange-500/10 rounded-lg">
+                                        <div className="text-lg font-bold text-orange-600 dark:text-orange-400">{schoolStats.riskStats.Overweight}</div>
+                                        <div className="text-[10px] uppercase font-semibold text-orange-600/80">Over</div>
                                     </div>
                                     <div className="text-center p-2 bg-rose-500/10 rounded-lg">
-                                        <div className="text-lg font-bold text-rose-600 dark:text-rose-400">{schoolStats.riskStats.Malnourished}</div>
-                                        <div className="text-[10px] uppercase font-semibold text-rose-600/80">Severe</div>
+                                        <div className="text-lg font-bold text-rose-600 dark:text-rose-400">{schoolStats.riskStats.Obesity}</div>
+                                        <div className="text-[10px] uppercase font-semibold text-rose-600/80">Obese</div>
                                     </div>
-                                    <Button variant="outline" size="sm" className="col-span-3 mt-2 hover:bg-blue-500/10 hover:text-blue-600 transition-colors" asChild>
+                                    <Button variant="outline" size="sm" className="col-span-4 mt-2 hover:bg-blue-500/10 hover:text-blue-600 transition-colors" asChild>
                                         <Link to="/school-analytics">Full Report <ChevronRight className="h-4 w-4 ml-1"/></Link>
                                     </Button>
                                 </CardContent>

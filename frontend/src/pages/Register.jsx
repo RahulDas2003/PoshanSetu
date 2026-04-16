@@ -178,7 +178,7 @@ const Register = () => {
 
                 {/* Features (Visible on Desktop) */}
                 <div className="hidden md:flex flex-col gap-8 animate-in fade-in slide-in-from-right-12 duration-700">
-                    <h2 className="text-4xl font-extrabold leading-tight tracking-tight">Join SmartAI <br/><span className="text-primary">Nutrition</span></h2>
+                    <h2 className="text-4xl font-extrabold leading-tight tracking-tight">Join <br/><span className="text-primary">PoshanSetu</span></h2>
                     <ul className="flex flex-col gap-5">
                         {[
                             { icon: <CheckCircle />, text: "100% Free to use" },

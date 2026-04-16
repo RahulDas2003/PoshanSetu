@@ -36,9 +36,10 @@ const SchoolAnalytics = () => {
     if (!stats) return <div className="min-h-screen pt-28 text-center">Dashboard unavailable</div>;
 
     const total = stats.totalStudents || 1;
-    const healthyPct = Math.round((stats.riskStats.Healthy / total) * 100) || 0;
-    const atRiskPct = Math.round((stats.riskStats.AtRisk / total) * 100) || 0;
-    const malnourishedPct = Math.round((stats.riskStats.Malnourished / total) * 100) || 0;
+    const healthyPct = Math.round((stats.riskStats.HealthyWeight / total) * 100) || 0;
+    const underweightPct = Math.round((stats.riskStats.Underweight / total) * 100) || 0;
+    const overweightPct = Math.round((stats.riskStats.Overweight / total) * 100) || 0;
+    const obesityPct = Math.round((stats.riskStats.Obesity / total) * 100) || 0;
 
     return (
         <div className="min-h-screen pt-28 pb-20 bg-background text-foreground">
@@ -50,11 +51,11 @@ const SchoolAnalytics = () => {
                         <BookOpen className="h-8 w-8 text-primary" />
                         School Monitoring
                     </h1>
-                    <p className="text-muted-foreground">Aggregate view of student malnutrition risk and meal intake trends.</p>
+                    <p className="text-muted-foreground">Aggregate view of student BMI status and meal intake trends.</p>
                 </div>
 
                 {/* Top Metrics Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 animate-in fade-in slide-in-from-bottom-6 duration-700">
                     <Card className="shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Total Monitored</CardTitle>
@@ -68,34 +69,45 @@ const SchoolAnalytics = () => {
 
                     <Card className="shadow-sm border-emerald-500/20 bg-emerald-500/5">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-emerald-600 dark:text-emerald-400">Healthy</CardTitle>
+                            <CardTitle className="text-sm font-medium text-emerald-600 dark:text-emerald-400">Healthy Weight</CardTitle>
                             <Activity className="h-4 w-4 text-emerald-600 shrink-0" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400">{stats.riskStats.Healthy}</div>
+                            <div className="text-2xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400">{stats.riskStats.HealthyWeight}</div>
                             <p className="text-xs text-emerald-600/80 mt-1 dark:text-emerald-400/80">{healthyPct}% of total</p>
                         </CardContent>
                     </Card>
 
                     <Card className="shadow-sm border-amber-500/20 bg-amber-500/5">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-amber-600 dark:text-amber-400">At Risk</CardTitle>
+                            <CardTitle className="text-sm font-medium text-amber-600 dark:text-amber-400">Underweight</CardTitle>
                             <TrendingDown className="h-4 w-4 text-amber-600 shrink-0" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold tracking-tight text-amber-600 dark:text-amber-400">{stats.riskStats.AtRisk}</div>
-                            <p className="text-xs text-amber-600/80 mt-1 dark:text-amber-400/80">{atRiskPct}% of total</p>
+                            <div className="text-2xl font-bold tracking-tight text-amber-600 dark:text-amber-400">{stats.riskStats.Underweight}</div>
+                            <p className="text-xs text-amber-600/80 mt-1 dark:text-amber-400/80">{underweightPct}% of total</p>
                         </CardContent>
                     </Card>
                     
+                    <Card className="shadow-sm border-orange-500/20 bg-orange-500/5">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium text-orange-600 dark:text-orange-400">Overweight</CardTitle>
+                            <AlertTriangle className="h-4 w-4 text-orange-600 shrink-0" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold tracking-tight text-orange-600 dark:text-orange-400">{stats.riskStats.Overweight}</div>
+                            <p className="text-xs text-orange-600/80 mt-1 dark:text-orange-400/80">{overweightPct}% of total</p>
+                        </CardContent>
+                    </Card>
+
                     <Card className="shadow-sm border-rose-500/20 bg-rose-500/5">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-rose-600 dark:text-rose-400">Malnourished</CardTitle>
+                            <CardTitle className="text-sm font-medium text-rose-600 dark:text-rose-400">Obesity</CardTitle>
                             <AlertTriangle className="h-4 w-4 text-rose-600 shrink-0" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">{stats.riskStats.Malnourished}</div>
-                            <p className="text-xs text-rose-600/80 mt-1 dark:text-rose-400/80">{malnourishedPct}% of total</p>
+                            <div className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">{stats.riskStats.Obesity}</div>
+                            <p className="text-xs text-rose-600/80 mt-1 dark:text-rose-400/80">{obesityPct}% of total</p>
                         </CardContent>
                     </Card>
                 </div>

@@ -58,7 +58,7 @@ const Navbar = () => {
                     <div className="bg-primary/10 text-primary p-2 rounded-lg">
                         <Utensils className="h-5 w-5" />
                     </div>
-                    <span className="text-slate-900 dark:text-white">Smart<span className="text-primary">Nutrition</span></span>
+                    <span className="text-slate-900 dark:text-white">Poshan<span className="text-primary">Setu</span></span>
                 </Link>
 
                 {/* Desktop Navigation */}
