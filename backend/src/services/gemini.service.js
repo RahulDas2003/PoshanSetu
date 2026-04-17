@@ -68,7 +68,28 @@ export const getMealRecommendations = async (userProfile, dailyProgress, mealTyp
     const remainingCalories = (userProfile.dailyTargets?.calories || 2000) - (dailyProgress?.consumed?.calories || 0);
     const remainingProtein = (userProfile.dailyTargets?.protein || 150) - (dailyProgress?.consumed?.protein || 0);
 
-    const prompt = `You are a helpful Indian nutrition assistant specializing in traditional Indian cuisine. Suggest meal ideas for the user based on authentic North Indian and South Indian foods.
+    // Randomize regional focus and cuisine category each call for variety
+    const regionalFocuses = [
+        'Punjabi', 'Rajasthani', 'Gujarati', 'Maharashtrian', 'Bengali',
+        'Hyderabadi', 'Tamil', 'Kerala', 'Karnataka', 'Andhra',
+        'Lucknowi/Awadhi', 'Bihari', 'Odia', 'Kashmiri', 'Assamese',
+        'Chettinad', 'Mangalorean', 'Goan', 'UP Style', 'Marwari'
+    ];
+    const cuisineCategories = [
+        'lentil & dal based dishes', 'rice based dishes', 'roti & bread based meals',
+        'millet based healthy meals (ragi, bajra, jowar)', 'paneer & dairy based dishes',
+        'egg based protein-rich meals', 'traditional thali combinations',
+        'street food inspired healthy versions', 'fermented foods (idli, dosa, dhokla)',
+        'one-pot meals (khichdi, pulao, biryani)', 'stuffed paratha & sabzi combos',
+        'chaat & salad inspired light meals', 'traditional breakfast specials',
+        'seasonal vegetable based dishes', 'sprout & legume based protein meals'
+    ];
+    const randomRegion1 = regionalFocuses[Math.floor(Math.random() * regionalFocuses.length)];
+    const randomRegion2 = regionalFocuses[Math.floor(Math.random() * regionalFocuses.length)];
+    const randomCategory = cuisineCategories[Math.floor(Math.random() * cuisineCategories.length)];
+    const randomSeed = Math.floor(Math.random() * 10000);
+
+    const prompt = `You are a helpful Indian nutrition assistant specializing in traditional Indian cuisine from all regions of India. Your goal is to suggest UNIQUE and DIVERSE meal ideas every single time — never repeat the same common suggestions.
 
 User Profile:
 - Goal: ${userProfile.profile?.goal || 'maintain weight'}
@@ -77,9 +98,16 @@ User Profile:
 - Remaining Protein Today: ${remainingProtein}g
 - Meal Type Needed: ${mealType}
 
-Please suggest 3 healthy ${mealType} ideas using traditional Indian recipes. Include a mix of North Indian and South Indian dishes. Examples of foods to recommend:
-- North Indian: Roti/Chapati, Dal (Moong/Masoor/Arhar), Paneer dishes, Rajma, Chole, Paratha, Poha, Upma, Khichdi, Dahi, Lassi, Sabzis, Stuffed Parathas, etc.
-- South Indian: Idli, Dosa, Uttapam, Sambar, Rasam, Pongal, Appam, Puttu, Curd Rice, Kootu, Avial, Thoran, Vada, etc.
+🎲 VARIETY INSTRUCTIONS (Seed: ${randomSeed}):
+- Focus on ${randomRegion1} and ${randomRegion2} regional cuisines this time
+- Lean towards ${randomCategory}
+- Do NOT suggest commonly repeated dishes like plain dal-roti or basic idli-sambar. Go deeper into regional specialties.
+- Think of lesser-known but delicious home-cooked recipes from these regions.
+
+Draw from this wide pool of Indian dishes (but pick DIFFERENT ones each time):
+- North Indian: Dal Makhani, Rajma Chawal, Chole Bhature (healthy version), Stuffed Paratha (aloo/gobi/methi/paneer), Kadhi Pakora, Baingan Bharta, Sarson Ka Saag with Makki Roti, Aloo Gobi, Matar Paneer, Shahi Paneer, Jeera Rice, Poha, Upma, Sabudana Khichdi, Besan Cheela, Moong Dal Cheela, Aloo Tikki, Chana Chaat, Dahi Bhalla, Pav Bhaji, Paneer Tikka, Tandoori Roti, Missi Roti, Thepla, Dhokla, Khandvi, Undhiyu, Dal Baati Churma, Litti Chokha, Sattu Paratha, Bedmi Puri, Methi Thepla
+- South Indian: Masala Dosa, Rava Dosa, Pesarattu, Idiyappam, Puttu with Kadala Curry, Appam with Stew, Bisi Bele Bath, Pongal (Ven/Sakkarai), Lemon Rice, Coconut Rice, Tamarind Rice, Curd Rice, Sambar Rice, Rasam, Kootu, Avial, Thoran, Olan, Erissery, Medu Vada, Uttapam, Neer Dosa, Ragi Mudde, Ragi Dosa, Akki Rotti, Pesarattu, Paniyaram, Kottu Parotta, Malabar Biryani, Hyderabadi Biryani, Chettinad Chicken (or paneer), Guntur Chicken
+- Pan-Indian: Khichdi, Pulao, Biryani, Poha, Upma, Sevai, Daliya, Ragi Porridge, Oats Cheela, Sprout Salad, Chole, Kadhi, Mixed Veg Curry
 
 Each suggestion must:
 1. Fit within their remaining calories
@@ -100,8 +128,8 @@ Keep suggestions practical, home-cooked, and nutritious. Prioritize wholesome In
             {
                 model: 'llama-3.3-70b-versatile',
                 messages: [{ role: 'user', content: prompt }],
-                temperature: 0.8,
-                max_tokens: 600
+                temperature: 1.0,
+                max_tokens: 800
             },
             {
                 headers: {
