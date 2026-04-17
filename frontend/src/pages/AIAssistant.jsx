@@ -7,9 +7,20 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+const CHAT_STORAGE_KEY = 'poshanSetu_chat_messages';
+
 const AIAssistant = () => {
     const { user } = useAuth();
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(() => {
+        try {
+            const saved = sessionStorage.getItem(CHAT_STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            }
+        } catch (e) { /* ignore parse errors */ }
+        return [];
+    });
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [dailyTip, setDailyTip] = useState('');
@@ -21,12 +32,24 @@ const AIAssistant = () => {
     const [foodAnalysis, setFoodAnalysis] = useState(null);
     const messagesEndRef = useRef(null);
 
+    // Save messages to sessionStorage whenever they change
+    useEffect(() => {
+        if (messages.length > 0) {
+            try {
+                sessionStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+            } catch (e) { /* ignore storage errors */ }
+        }
+    }, [messages]);
+
     useEffect(() => {
         fetchDailyTip();
-        setMessages([{
-            role: 'assistant',
-            content: `Hey ${user?.name?.split(' ')[0] || 'there'}! 👋 I'm your AI nutrition assistant. Ask me anything about nutrition, meal planning, or healthy eating!`
-        }]);
+        // Only set the welcome message if there are no saved messages
+        if (messages.length === 0) {
+            setMessages([{
+                role: 'assistant',
+                content: `Hey ${user?.name?.split(' ')[0] || 'there'}! 👋 I'm your AI nutrition assistant. Ask me anything about nutrition, meal planning, or healthy eating!`
+            }]);
+        }
     }, []);
 
     useEffect(() => {
