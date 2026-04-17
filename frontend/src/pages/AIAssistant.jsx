@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, Cpu, Zap, RefreshCw, Search, Camera, Check, X, Lightbulb, Target } from 'lucide-react';
+import { Send, MessageCircle, Cpu, Zap, RefreshCw, Search, Camera, Check, X, Lightbulb, Target, Trash2 } from 'lucide-react';
 import { aiAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
@@ -163,6 +163,15 @@ const AIAssistant = () => {
         "Healthy snack ideas"
     ];
 
+    const clearChat = () => {
+        const welcomeMessage = {
+            role: 'assistant',
+            content: `Hey ${user?.name?.split(' ')[0] || 'there'}! 👋 I'm your AI nutrition assistant. Ask me anything about nutrition, meal planning, or healthy eating!`
+        };
+        setMessages([welcomeMessage]);
+        sessionStorage.removeItem(CHAT_STORAGE_KEY);
+    };
+
     const exampleMeals = [
         "2 eggs, 2 toast with butter, and orange juice",
         "Chicken salad with mixed greens and olive oil dressing",
@@ -256,6 +265,14 @@ const AIAssistant = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        className="rounded-full gap-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                                        onClick={clearChat}
+                                    >
+                                        <Trash2 className="h-4 w-4" /> Clear
+                                    </Button>
                                 </CardHeader>
                                 
                                 <CardContent className="flex-1 p-0 flex flex-col overflow-hidden bg-muted/10">
