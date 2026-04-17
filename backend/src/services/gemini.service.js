@@ -68,7 +68,7 @@ export const getMealRecommendations = async (userProfile, dailyProgress, mealTyp
     const remainingCalories = (userProfile.dailyTargets?.calories || 2000) - (dailyProgress?.consumed?.calories || 0);
     const remainingProtein = (userProfile.dailyTargets?.protein || 150) - (dailyProgress?.consumed?.protein || 0);
 
-    const prompt = `You are a helpful nutrition assistant. Suggest meal ideas for the user.
+    const prompt = `You are a helpful Indian nutrition assistant specializing in traditional Indian cuisine. Suggest meal ideas for the user based on authentic North Indian and South Indian foods.
 
 User Profile:
 - Goal: ${userProfile.profile?.goal || 'maintain weight'}
@@ -77,18 +77,22 @@ User Profile:
 - Remaining Protein Today: ${remainingProtein}g
 - Meal Type Needed: ${mealType}
 
-Please suggest 3 quick and healthy ${mealType} ideas that:
+Please suggest 3 healthy ${mealType} ideas using traditional Indian recipes. Include a mix of North Indian and South Indian dishes. Examples of foods to recommend:
+- North Indian: Roti/Chapati, Dal (Moong/Masoor/Arhar), Paneer dishes, Rajma, Chole, Paratha, Poha, Upma, Khichdi, Dahi, Lassi, Sabzis, Stuffed Parathas, etc.
+- South Indian: Idli, Dosa, Uttapam, Sambar, Rasam, Pongal, Appam, Puttu, Curd Rice, Kootu, Avial, Thoran, Vada, etc.
+
+Each suggestion must:
 1. Fit within their remaining calories
 2. Help meet their protein goal
-3. Are easy to prepare
+3. Use commonly available Indian ingredients and be easy to prepare at home
 
 Format each suggestion as:
-🍽️ **Meal Name**
-- Brief description
-- Approximate calories & protein
-- Why it's a good choice
+🍽️ **Dish Name (Hindi/Regional Name)**
+- Brief description with key ingredients
+- Approximate calories & protein per serving
+- Why it's a good choice for their goal
 
-Keep suggestions practical and accessible.`;
+Keep suggestions practical, home-cooked, and nutritious. Prioritize wholesome Indian meals over processed or Western foods.`;
 
     try {
         const response = await axios.post(
