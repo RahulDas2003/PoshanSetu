@@ -14,6 +14,7 @@ import {
     Cpu,
     Utensils
 } from 'lucide-react';
+import logo from '../../assets/logo.jpeg';
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -55,9 +56,7 @@ const Navbar = () => {
             <div className="container mx-auto px-6 h-20 flex items-center justify-between">
                 {/* Logo */}
                 <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2 text-2xl font-display font-extrabold tracking-tight">
-                    <div className="bg-primary/10 text-primary p-2 rounded-lg">
-                        <Utensils className="h-5 w-5" />
-                    </div>
+                    <img src={logo} alt="PoshanSetu Logo" className="h-9 w-9 rounded-lg object-cover" />
                     <span className="text-slate-900 dark:text-white">Poshan<span className="text-primary">Setu</span></span>
                 </Link>
 

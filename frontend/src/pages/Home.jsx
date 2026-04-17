@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ArrowRight, Check, Camera, PieChart, Target, Zap, Sparkles, Activity, Apple, Salad } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import logo from '../assets/logo.jpeg';
 
 const Home = () => {
     const { isAuthenticated } = useAuth();
@@ -139,7 +140,7 @@ const Home = () => {
                 {/* Minimal Footer */}
                 <footer className="text-center py-10 border-t text-muted-foreground font-medium flex flex-col items-center justify-center">
                     <div className="flex items-center gap-2 mb-4 text-xl font-black text-foreground">
-                        <Activity className="h-6 w-6 text-primary" /> PoshanSetu
+                        <img src={logo} alt="PoshanSetu Logo" className="h-8 w-8 rounded-lg object-cover" /> PoshanSetu
                     </div>
                     <p>Designed for effortless tracking. Made with ❤️ in 2026.</p>
                 </footer>

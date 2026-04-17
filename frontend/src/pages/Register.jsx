@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Lock, Eye, EyeOff, ArrowRight, Activity, CheckCircle, Smartphone, ShieldCheck, Zap } from 'lucide-react';
+import logo from '../assets/logo.jpeg';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -58,8 +59,8 @@ const Register = () => {
                 <Card className="w-full max-w-md mx-auto relative z-20 shadow-xl border-border bg-card/80 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-500">
                     <CardContent className="p-8">
                         <div className="text-center mb-8">
-                            <Link to="/" className="inline-flex bg-primary/10 text-primary p-4 rounded-3xl mb-4 shadow-sm transform hover:scale-110 transition-transform">
-                                <Activity className="h-8 w-8" />
+                            <Link to="/" className="inline-flex rounded-3xl mb-4 shadow-sm transform hover:scale-110 transition-transform overflow-hidden">
+                                <img src={logo} alt="PoshanSetu Logo" className="h-16 w-16 rounded-2xl object-cover" />
                             </Link>
                             <h1 className="text-3xl font-bold tracking-tight mb-2">Create Account</h1>
                             <p className="text-muted-foreground font-medium text-sm">Start your healthy eating journey today</p>
