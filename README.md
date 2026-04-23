@@ -12,7 +12,7 @@ An AI-powered nutrition tracking and meal planning application built with the ME
 
 ## Tech Stack
 
-- **Frontend**: React 18 + Vite
+- **Frontend**: React 18 + 
 - **Backend**: Node.js + Express.js
 - **Database**: MongoDB
 - **APIs**: OpenFoodFacts (free), CalorieNinjas
