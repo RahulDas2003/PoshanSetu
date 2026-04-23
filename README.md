@@ -81,7 +81,7 @@ smartai-nutrition-app/
 - `PUT /api/auth/profile` - Update profile
 
 ### Health Check
-- `GET /api/health` - Check API status
+- `GET /api/health` - Check API Status
 
 ## License
 
