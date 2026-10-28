@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import RecipeRecommendationsView from '../components/RecipeRecommendations';
 
 const CHAT_STORAGE_KEY = 'poshanSetu_chat_messages';
 
@@ -25,6 +26,7 @@ const AIAssistant = () => {
     const [loading, setLoading] = useState(false);
     const [dailyTip, setDailyTip] = useState('');
     const [recommendations, setRecommendations] = useState('');
+    const [selectedMealType, setSelectedMealType] = useState('dinner');
     const [activeTab, setActiveTab] = useState('chat');
     const [foodDescription, setFoodDescription] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
@@ -66,6 +68,7 @@ const AIAssistant = () => {
     };
 
     const fetchRecommendations = async (mealType) => {
+        setSelectedMealType(mealType);
         setLoading(true);
         try {
             const response = await aiAPI.getRecommendations(mealType);
@@ -565,10 +568,11 @@ const AIAssistant = () => {
                                                 <p className="font-semibold text-muted-foreground animate-pulse">Generating recipes...</p>
                                             </div>
                                         ) : recommendations ? (
-                                            <div className="prose prose-slate dark:prose-invert max-w-none text-sm sm:text-base prose-p:leading-relaxed overflow-y-auto h-full pr-4 custom-scrollbar">
-                                                <pre className="whitespace-pre-wrap font-sans bg-transparent p-0 text-foreground">
-                                                    {recommendations}
-                                                </pre>
+                                            <div className="overflow-y-auto h-full pr-1 custom-scrollbar">
+                                                <RecipeRecommendationsView 
+                                                    recommendationsData={recommendations} 
+                                                    fallbackMealType={selectedMealType} 
+                                                />
                                             </div>
                                         ) : (
                                             <div className="absolute inset-0 flex flex-col items-center justify-center opacity-50 px-8 text-center space-y-4">
